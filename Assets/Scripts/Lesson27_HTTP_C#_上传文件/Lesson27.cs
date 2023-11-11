@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -87,11 +89,5 @@ public class Lesson27 : MonoBehaviour
             print("上传失败"+res.StatusCode);
         }
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

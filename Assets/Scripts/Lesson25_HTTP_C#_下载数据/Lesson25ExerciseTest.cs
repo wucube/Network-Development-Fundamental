@@ -17,13 +17,12 @@ public class Lesson25ExerciseTest: MonoBehaviour
         //        print("下载失败" + code);
         //});
 
-         HttpMgr.Instance.UpLoadFileAsync("封装后上传.png", Application.streamingAssetsPath + "/test.png", (code) =>
+        HttpMgr.Instance.UpLoadFileAsync("封装后上传.png", Application.streamingAssetsPath + "/test.png", (code) =>
         {
             if (code == HttpStatusCode.OK)
                 print("上传指令成功");
             else
                 print("上传指令失败" + code);
         });
-
     }
 }
