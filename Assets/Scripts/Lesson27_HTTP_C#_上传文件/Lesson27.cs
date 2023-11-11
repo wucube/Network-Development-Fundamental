@@ -7,9 +7,26 @@ using UnityEngine;
 
 public class Lesson27 : MonoBehaviour
 {
+    #region 知识点一 上传文件到HTTP资源服务器需要遵守的规则
+    //上传文件时内容的必备规则
+    //  1:ContentType = "multipart/form-data; boundary=边界字符串";
+
+    //  2:上传的数据必须按照格式写入流中
+    //  --边界字符串
+    //  Content-Disposition: form-data; name="字段名字，之后写入的文件2进制数据和该字段名对应";filename="传到服务器上使用的文件名"
+    //  Content-Type:application/octet-stream（由于我们传2进制文件 所以这里使用2进制）
+    //  空一行
+    //  （这里直接写入传入的内容）
+    //  --边界字符串--
+
+    //  3:保证服务器允许上传
+    //  4:写入流前需要先设置ContentLength内容长度
+    #endregion
+
     // Start is called before the first frame update
     void Start()
     {
+
         //1.创建HttpWebRequest对象
         HttpWebRequest req = HttpWebRequest.Create("http://192.168.10.4:8080/HTTP_Server/") as HttpWebRequest;
         //2.相关设置（请求类型，内容类型，超时，身份验证等）
