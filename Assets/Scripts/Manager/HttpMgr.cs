@@ -11,7 +11,6 @@ public class HttpMgr
     public static HttpMgr Instance => instance;
 
     private string HTTP_PATH = "http://192.168.10.4:8080/HTTP_Server/";
-
     private string USER_NAME = "cube";
     private string PASS_WORD = "cube";
 
@@ -93,7 +92,7 @@ public class HttpMgr
     }
 
     /// <summary>
-    /// 上传文件到HTTP服务器
+    /// 上传文件
     /// </summary>
     /// <param name="fileName">传到远端服务器上的文件名</param>
     /// <param name="loacalFilePath">本地的文件路径</param>
@@ -101,7 +100,6 @@ public class HttpMgr
     public async void UpLoadFileAsync(string fileName, string loacalFilePath, UnityAction<HttpStatusCode> action)
     {
         HttpStatusCode result = HttpStatusCode.BadRequest;
-
         await Task.Run(() =>
         {
             try
@@ -118,8 +116,7 @@ public class HttpMgr
                 "Content-Disposition:form-data;name=\"file\";filename=\"{0}\"\r\n" +
                 "Content-Type:application/octet-stream\r\n\r\n";
                 //替换文件名
-                head = string.Format(head, fileName);//替换 head字符串的{0} 
-
+                head = string.Format(head, fileName);
                 byte[] headBytes = Encoding.UTF8.GetBytes(head);
 
                 //尾部的边界字符串
@@ -158,7 +155,6 @@ public class HttpMgr
                 Debug.Log("上传出错" + w.Status + w.Message);
             }
         });
-
-        action?.Invoke(result);//在Task执行结束后调用回调委托，避免在多线程中访问Unity对象
+        action?.Invoke(result);
     }
 }
