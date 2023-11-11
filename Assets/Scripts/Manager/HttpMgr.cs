@@ -116,7 +116,8 @@ public class HttpMgr
                 "Content-Disposition:form-data;name=\"file\";filename=\"{0}\"\r\n" +
                 "Content-Type:application/octet-stream\r\n\r\n";
                 //替换文件名
-                head = string.Format(head, fileName);//将head字符串的{0}替换为 fileName的值
+                head = string.Format(head, fileName);//替换 head字符串的{0} 
+
                 byte[] headBytes = Encoding.UTF8.GetBytes(head);
 
                 //尾部的边界字符串
@@ -155,6 +156,7 @@ public class HttpMgr
                 Debug.Log("上传出错" + w.Status + w.Message);
             }
         });
-        action?.Invoke(result);//在Task外部调用传入的委托，避免在多线程中访问Unity的类
+
+        action?.Invoke(result);//在Task执行结束后调用回调委托，避免在多线程中访问Unity对象
     }
 }
