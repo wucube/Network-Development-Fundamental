@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ public class NetWWWMgr : MonoBehaviour
 {
     private static NetWWWMgr instance;
     public static NetWWWMgr Instance => instance;
+
+    private string HTTP_SERVER_PATH = "http://192.168.10.4:8080/HTTP_Server/";
 
     // Start is called before the first frame update
     void Awake()
@@ -25,7 +28,6 @@ public class NetWWWMgr : MonoBehaviour
     {
         StartCoroutine(LoadResAsync<T>(path, action));
     }
-
     private IEnumerator LoadResAsync<T>(string path, UnityAction<T> action) where T : class
     {
         //声明www对象 用于下载或加载
@@ -74,4 +76,50 @@ public class NetWWWMgr : MonoBehaviour
             Debug.LogError("www加载资源出错" + www.error);
         }
     }
+
+    public void SendMsg<T>(BaseMsg msg, UnityAction<T> action) where T : BaseMsg
+    {
+        StartCoroutine(SendMsgAsync<T>(msg, action));
+    }
+
+    private IEnumerator SendMsgAsync<T>(BaseMsg msg, UnityAction<T> action) where T : BaseMsg
+    {
+        //消息发送
+        WWWForm data = new WWWForm();
+        //准备要发送的消息数据
+        data.AddBinaryData("Msg", msg.Writing());
+
+        WWW www = new WWW(HTTP_SERVER_PATH, data);
+        //也可以直接传递 2进制字节数组 只要和后端定好规则 怎么传都是可以的
+        //WWW www = new WWW("HTTP_SERVER_PATH", msg.Writing());
+
+        //异步等待 发送结束 才会继续执行后面的代码
+        yield return www;
+
+        //发送完毕过后 收到响应 
+        //这里模拟：认为后端发回来的内容 也是一个继承自BaseMsg类的一个字节数组对象
+        if (www.error == null)
+        {
+            //先解析 ID和消息长度
+            int index = 0;
+            int msgID = BitConverter.ToInt32(www.bytes, index);
+            index += 4;
+            int msgLength = BitConverter.ToInt32(www.bytes, index);
+            index += 4;
+            //反序列化 BaseMsg
+            BaseMsg baseMsg = null;
+            switch (msgID)
+            {
+                case 1001:
+                    baseMsg = new PlayerMsg();
+                    baseMsg.Reading(www.bytes, index);
+                    break;
+            }
+            if (baseMsg != null)
+                action?.Invoke(baseMsg as T);
+        }
+        else
+            Debug.LogError("发消息出问题" + www.error);
+    }
+
 }
