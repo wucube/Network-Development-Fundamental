@@ -1,8 +1,71 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
+
+interface IValueConverter<T> where T : struct
+{
+    byte[] FromValue(T value);
+}
+
+class ValueConverter : IValueConverter<int>,IValueConverter<short>,IValueConverter<float>,
+    IValueConverter<long>,IValueConverter<bool>,IValueConverter<byte>
+{
+    byte[] IValueConverter<bool>.FromValue(bool value)
+    {
+        return BitConverter.GetBytes(value);
+    }
+
+    byte[] IValueConverter<int>.FromValue(int value)
+    {
+        return BitConverter.GetBytes(value);
+    }
+
+    byte[] IValueConverter<short>.FromValue(short value)
+    {
+        return BitConverter.GetBytes(value);
+    }
+
+    byte[] IValueConverter<float>.FromValue(float value)
+    {
+        return BitConverter.GetBytes(value);
+    }
+
+    byte[] IValueConverter<byte>.FromValue(byte value)
+    {
+        return BitConverter.GetBytes(value);
+    }
+
+    byte[] IValueConverter<long>.FromValue(long value)
+    {
+        return BitConverter.GetBytes(value);
+    }
+}
+
+public class GenericsBitConverter<T> where T : struct
+{
+    T _value;
+
+    IValueConverter<T> converter = new ValueConverter() as IValueConverter<T>;
+
+    public void SetValue(T value)
+    {
+        this._value = value;
+    }
+
+    public byte[] GetBytes()
+    {
+        if (converter == null)
+        {
+            throw new InvalidOperationException("Unsuported type");
+        }
+
+        return converter.FromValue(this._value);
+    }
+}
+
 
 public abstract class BaseData
 {
@@ -25,6 +88,14 @@ public abstract class BaseData
     /// <param name="beginIndex">从该字节数组的第几个位置开始解析 默认是0</param>
     public abstract int Reading(byte[] bytes, int beginIndex = 0);
 
+
+    //private void WriteValue<T>(byte[] bytes, T value, ref int index) where T : struct
+    //{
+    //    T valueType;
+    //    GenericsBitConverter<T> genericsBitConverter = new GenericsBitConverter<T>();
+    //    genericsBitConverter.GetBytes().CopyTo(bytes, index);
+    //    index += sizeof(T);
+    //}
 
 
     /// <summary>
@@ -64,6 +135,15 @@ public abstract class BaseData
         BitConverter.GetBytes(value).CopyTo(bytes, index);
         index += sizeof(bool);
     }
+
+    //protected void WriteValue<T>(byte[] bytes,T value,ref int index) where T : struct
+    //{
+    //    byte[] valueBytes = BitConverter.GetBytes(value);
+    //    valueBytes.CopyTo(bytes, index);
+    //    index += Marshal.SizeOf(typeof(T));
+    //}
+
+
     protected void WriteString(byte[] bytes, string value, ref int index)
     {
         //先存储string字节数组的长度
