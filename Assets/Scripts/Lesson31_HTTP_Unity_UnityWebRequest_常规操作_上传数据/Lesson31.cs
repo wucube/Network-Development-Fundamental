@@ -38,11 +38,11 @@ public class Lesson31 : MonoBehaviour
         //6.表单名，字符串数据，编码格式，文件名
         dataList.Add(new MultipartFormFileSection("file", "123123123", Encoding.UTF8, "test.txt"));
 
-        StartCoroutine(UpLoad());
+        StartCoroutine(Upload());
 
     }
 
-    IEnumerator UpLoad()
+    IEnumerator Upload()
     {
         //准备上传的数据 
         List<IMultipartFormSection> data= new List<IMultipartFormSection>();
@@ -54,7 +54,7 @@ public class Lesson31 : MonoBehaviour
         //传文本文件
         data.Add(new MultipartFormFileSection("12312312312321", "Test123.txt"));
 
-        UnityWebRequest uwr = new UnityWebRequest("http://192.168.10.9:8080/HTTP_Server/");
+        UnityWebRequest uwr = UnityWebRequest.Get("http://192.168.10.9:8080/HTTP_Server/");
         uwr.SendWebRequest();
 
         while (!uwr.isDone)
@@ -78,7 +78,7 @@ public class Lesson31 : MonoBehaviour
         }
     }
 
-    IEnumerator UpLoadPut()
+    IEnumerator UploadPut()
     {
         //Put发送数据
         UnityWebRequest uwr = UnityWebRequest.Put("http://192.168.10.9:8080/HTTP_Server/",File.ReadAllBytes(Application.streamingAssetsPath+"/test.png"));

@@ -1,15 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Networking;
 
 public class NetWWWMgr : MonoBehaviour
 {
     private static NetWWWMgr instance;
     public static NetWWWMgr Instance => instance;
 
-    private string HTTP_SERVER_PATH = "http://192.168.10.4:8080/HTTP_Server/";
+    private string HTTP_SERVER_PATH = "http://192.168.10.9:8080/HTTP_Server/";
 
     // Start is called before the first frame update
     void Awake()
@@ -77,6 +79,12 @@ public class NetWWWMgr : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 使用WWW类异步发送消息
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="msg"></param>
+    /// <param name="action"></param>
     public void SendMsg<T>(BaseMsg msg, UnityAction<T> action) where T : BaseMsg
     {
         StartCoroutine(SendMsgAsync<T>(msg, action));
@@ -120,6 +128,36 @@ public class NetWWWMgr : MonoBehaviour
         }
         else
             Debug.LogError("发消息出问题" + www.error);
+    }
+
+    /// <summary>
+    /// 使用 UnityWebRequest 类 异步上传文件
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="localPath"></param>
+    /// <param name="action"></param>
+    public void UploadFile(string fileName,string localPath,UnityAction<UnityWebRequest.Result> action)
+    {
+        StartCoroutine(UploadFileAsync(fileName, localPath, action));
+    }
+
+    private IEnumerator UploadFileAsync(string fileName,string localPath,UnityAction<UnityWebRequest.Result> action)
+    {
+        //添加要上传文件的数据
+        List<IMultipartFormSection> dataList = new List<IMultipartFormSection>();
+        dataList.Add(new MultipartFormFileSection(fileName, File.ReadAllBytes(localPath)));
+
+        UnityWebRequest uwr = UnityWebRequest.Post(HTTP_SERVER_PATH, dataList);
+
+        yield return uwr.SendWebRequest();
+
+        action?.Invoke(uwr.result);
+
+        //如果不成功
+        if (uwr.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogWarning("上传出现问题" + uwr.error + uwr.responseCode);
+        }
     }
 
 }
