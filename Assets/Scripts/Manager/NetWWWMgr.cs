@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class NetWWWMgr : MonoBehaviour
 {
@@ -157,6 +158,65 @@ public class NetWWWMgr : MonoBehaviour
         if (uwr.result != UnityWebRequest.Result.Success)
         {
             Debug.LogWarning("上传出现问题" + uwr.error + uwr.responseCode);
+        }
+    }
+
+    /// <summary>
+    /// 通过UnityWebRequest异步获取数据
+    /// </summary>
+    /// <typeparam name="T">byte[]、Texture、AssetBundle、AudioClip、object（自定义规则：如果是object证明要保存到本地）</typeparam>
+    /// <param name="path">远端或者本地数据路径 http ftp file</param>
+    /// <param name="action">获取成功后的回调函数</param>
+    /// <param name="localPath">如果是下载到本地 需要传第3个参数</param>
+    /// <param name="type">如果是下载 音效切片文件 需要穿音效类型</param>
+    public void UnityWebRequestLoad<T>(string path,UnityAction<T> action,string localPath="",AudioType type = AudioType.MPEG) where T : class
+    {
+        StartCoroutine(UnityWebRequestLoadAsync<T>(path, action, localPath, type));
+    }
+
+    private IEnumerator UnityWebRequestLoadAsync<T>(string path,UnityAction<T> action,string localPath="",AudioType type = AudioType.MPEG) where T : class
+    {
+        UnityWebRequest uwr = new UnityWebRequest(path, UnityWebRequest.kHttpVerbGET);
+
+        if (typeof(T) == typeof(byte[]))
+            uwr.downloadHandler = new DownloadHandlerBuffer();
+        else if(typeof(T)==typeof(TextAsset))
+            uwr.downloadHandler= new DownloadHandlerBuffer();
+        else if (typeof(T) == typeof(Texture))
+            uwr.downloadHandler = new DownloadHandlerTexture();
+        else if (typeof(T) == typeof(AssetBundle))
+            uwr.downloadHandler = new DownloadHandlerAssetBundle(uwr.url, 0);//有AB包的的校验码就不传入0
+        else if (typeof(T) == typeof(object))
+            uwr.downloadHandler = new DownloadHandlerFile(localPath);
+        else if (typeof(T) == typeof(AudioClip))
+            uwr = UnityWebRequestMultimedia.GetAudioClip(path, type);
+        else//如果出现没有的类型  就不用继续往下执行了
+        {
+            Debug.LogWarning("未知类型" + typeof(T));
+            yield break;
+        }
+
+        yield return uwr.SendWebRequest();
+
+        if (uwr.result == UnityWebRequest.Result.Success)
+        {
+            if (typeof(T) == typeof(byte[]))
+                action?.Invoke(uwr.downloadHandler.data as T);
+            else if (typeof(T) == typeof(TextAsset))
+                action?.Invoke(uwr.downloadHandler.data as T);
+            else if (typeof(T) == typeof(Texture))
+                //action?.Invoke((req.downloadHandler as DownloadHandlerTexture).texture as T);
+                action?.Invoke(DownloadHandlerTexture.GetContent(uwr) as T);
+            else if (typeof(T) == typeof(AssetBundle))
+                action?.Invoke((uwr.downloadHandler as DownloadHandlerAssetBundle).assetBundle as T);
+            else if (typeof(T) == typeof(object))
+                action?.Invoke(null);
+            else if (typeof(T) == typeof(AudioClip))
+                action?.Invoke(DownloadHandlerAudioClip.GetContent(uwr) as T);
+        }
+        else
+        {
+            Debug.LogWarning("获取数据失败" + uwr.result + uwr.error + uwr.responseCode);
         }
     }
 

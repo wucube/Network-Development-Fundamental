@@ -44,14 +44,25 @@ public class Lesson28ExerciseTest : MonoBehaviour
         //    print(str);
         //});
 
-        NetWWWMgr.Instance.UploadFile("UnityWebRequest异步上传文件.png", Application.streamingAssetsPath + "/test.png", (result) =>
+        //NetWWWMgr.Instance.UploadFile("UnityWebRequest异步上传文件.png", Application.streamingAssetsPath + "/test.png", (result) =>
+        //{
+        //    if (result == UnityWebRequest.Result.Success)
+        //    {
+        //        print("上传成功");
+        //    }
+        //    else
+        //        print("上传失败" + result);
+        //});
+
+        //NetWWWMgr.Instance.UnityWebRequestLoad<Texture>("http://192.168.10.9:8080/HTTP_Server/技能的本质.png", (texture) =>
+        //{
+        //    rawImage.texture = texture;
+        //});
+
+        print(Application.persistentDataPath);
+        NetWWWMgr.Instance.UnityWebRequestLoad<object>("http://192.168.10.9:8080/HTTP_Server/技能的本质.png", (obj) =>
         {
-            if (result == UnityWebRequest.Result.Success)
-            {
-                print("上传成功");
-            }
-            else
-                print("上传失败" + result);
-        });
+            print("保存成功");
+        }, Application.persistentDataPath + "/Lesson33练习题.png");
     }
 }
