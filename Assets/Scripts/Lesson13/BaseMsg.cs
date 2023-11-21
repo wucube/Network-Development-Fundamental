@@ -18,7 +18,6 @@ public class BaseMsg : BaseData
     {
         throw new System.NotImplementedException();
     }
-
     public virtual int GetID()
     {
         return 0;
