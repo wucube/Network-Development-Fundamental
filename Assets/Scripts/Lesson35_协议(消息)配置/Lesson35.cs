@@ -3,49 +3,6 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
-namespace GamePlayer
-{
-    public enum ENUM_NAME
-    {
-        MAIN = 1,
-        OTHER,
-    }
-
-    public class PlayerData : BaseData
-    {
-        public int id;
-        public float atk;
-        public long lev;
-        public int[] arrays;
-        public List<int> list;
-        public Dictionary<int, string> dic;
-
-        public override int GetBytesNum()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override int Reading(byte[] bytes, int beginIndex = 0)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override byte[] Writing()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
-    public class PlayerMsg : BaseMsg
-    {
-        public override int GetID()
-        {
-            return base.GetID();
-        }
-    }
-}
-
-
 public class Lesson35 : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -115,8 +72,6 @@ public class Lesson35 : MonoBehaviour
                 print(field.Attributes["type"].Value + " " + field.Attributes["name"].Value + ";");
             }
         }
-
-
     }
 
     // Update is called once per frame

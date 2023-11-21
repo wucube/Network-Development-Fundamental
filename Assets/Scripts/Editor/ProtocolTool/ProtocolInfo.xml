@@ -19,13 +19,10 @@
 		<field type = "float" name="atk"/>
 		<field type = "bool" name="sex"/>
 		<field type = "long" name="lev"/>
-		<field type = "array" data = "int" name="arrays"/>
+		<field type = "array" data = "int"  name="arrays"/>
 		<field type = "list" T = "int" name ="list"/>
 		<field type = "dictionary" TKey = "int" TValue= "string" name="dict"/>
-		<field type = "HeroType" name = "heroType"/>
-	</data>
-	<data name = "HeartData" namespace = "GameSystem">
-		<field type = "long" name = "time"/>
+		<field type = "enum" data = "HeroType" name = "heroType"/>
 	</data>
 	<!--消息类配置规则-->
 	<message id = "1001" name="PlayerMsg" namespace = "GamePlayer">
