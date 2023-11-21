@@ -233,6 +233,91 @@ public class GenerateCSharp
     }
 
     /// <summary>
+    /// 生成消息类
+    /// </summary>
+    /// <param name="nodes"></param>
+    public void GenerateMsg(XmlNodeList nodes)
+    {
+        string idStr = "";
+        string namespaceStr = "";
+        string classNameStr = "";
+        string fieldStr = "";
+        string getBytesNumStr = "";
+        string writingStr = "";
+        string readingStr = "";
+
+        foreach (XmlNode dataNode in nodes)
+        {
+            //消息ID
+            idStr = dataNode.Attributes["id"].Value;
+            //命名空间
+            namespaceStr = dataNode.Attributes["namespace"].Value;
+            //类名
+            classNameStr = dataNode.Attributes["name"].Value;
+            //读取所有字段节点
+            XmlNodeList fields = dataNode.SelectNodes("field");
+            //拼接声明的成员变量，返回拼接结果
+            fieldStr = GetFieldStr(fields);
+            //对GetBytesNum函数中的字符串内容进行拼接 返回结果
+            getBytesNumStr = GetGetBytesNumStr(fields);
+            //对Writing函数中的字符串内容进行拼接 返回结果
+            writingStr = GetWritingStr(fields);
+            //对Reading函数中的字符串内容进行拼接 返回结果
+            readingStr = GetReadingStr(fields);
+
+            string dataStr = "using System;\r\n" +
+                             "using System.Collections.Generic;\r\n" +
+                             "using System.Text;\r\n" +
+                             $"namespace {namespaceStr}\r\n" +
+                              "{\r\n" +
+                              $"\tpublic class {classNameStr} : BaseMsg\r\n" +
+                              "\t{\r\n" +
+                                    $"{fieldStr}" +
+                                    "\t\tpublic override int GetBytesNum()\r\n" +
+                                    "\t\t{\r\n" +
+                                        "\t\t\tint num = 8;\r\n" +//8 代表的是 消息ID的4个字节 + 消息体长度的4个字节
+                                        $"{getBytesNumStr}" +
+                                        "\t\t\treturn num;\r\n" +
+                                    "\t\t}\r\n" +
+                                    "\t\tpublic override byte[] Writing()\r\n" +
+                                    "\t\t{\r\n" +
+                                        "\t\t\tint index = 0;\r\n" +
+                                        "\t\t\tbyte[] bytes = new byte[GetBytesNum()];\r\n" +
+                                        "\t\t\tWriteInt(bytes, GetID(), ref index);\r\n" +
+                                        "\t\t\tWriteInt(bytes, bytes.Length - 8, ref index);\r\n" +
+                                        $"{writingStr}" +
+                                        "\t\t\treturn bytes;\r\n" +
+                                    "\t\t}\r\n" +
+                                    "\t\tpublic override int Reading(byte[] bytes, int beginIndex = 0)\r\n" +
+                                    "\t\t{\r\n" +
+                                        "\t\t\tint index = beginIndex;\r\n" +
+                                        $"{readingStr}" +
+                                        "\t\t\treturn index - beginIndex;\r\n" +
+                                    "\t\t}\r\n" +
+                                    "\t\tpublic override int GetID()\r\n" +
+                                    "\t\t{\r\n" +
+                                        "\t\t\treturn " + idStr + ";\r\n" +
+                                    "\t\t}\r\n" +
+                              "\t}\r\n" +
+                              "}";
+
+            //保存为 脚本文件
+            //保存文件的路径
+            string path = SavePath + namespaceStr + "/Msg/";
+            //如果不存在这个文件夹 则创建
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            //字符串保存 存储为枚举脚本文件
+            File.WriteAllText(path + classNameStr + ".cs", dataStr);
+
+        }
+        Debug.Log("消息类生成结束");
+    }
+
+
+
+    /// <summary>
     /// 获取成员变量声明内容
     /// </summary>
     /// <param name="fields"></param>

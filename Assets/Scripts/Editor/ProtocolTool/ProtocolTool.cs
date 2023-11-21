@@ -22,6 +22,8 @@ public class ProtocolTool
         generateCSharp.GenerateEnum(GetNodes("enum"));
         //生成对应的C#数据结构类成员
         generateCSharp.GenerateData(GetNodes("data"));
+        //生成对应的消息类脚本
+        generateCSharp.GenerateMsg(GetNodes("message"));
 
         AssetDatabase.Refresh();
     }
