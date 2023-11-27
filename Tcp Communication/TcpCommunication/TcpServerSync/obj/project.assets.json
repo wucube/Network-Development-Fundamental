@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\CodeProject\\Unity\\Network Development Fundamental\\Tcp Communication\\TcpCommunication\\NetSync\\TcpServerSync.csproj",
+      "projectUniqueName": "E:\\CodeProject\\Unity\\Network Development Fundamental\\Tcp Communication\\TcpCommunication\\TcpServerSync\\TcpServerSync.csproj",
       "projectName": "TcpServerSync",
-      "projectPath": "E:\\CodeProject\\Unity\\Network Development Fundamental\\Tcp Communication\\TcpCommunication\\NetSync\\TcpServerSync.csproj",
+      "projectPath": "E:\\CodeProject\\Unity\\Network Development Fundamental\\Tcp Communication\\TcpCommunication\\TcpServerSync\\TcpServerSync.csproj",
       "packagesPath": "C:\\Users\\ostxe\\.nuget\\packages\\",
-      "outputPath": "E:\\CodeProject\\Unity\\Network Development Fundamental\\Tcp Communication\\TcpCommunication\\NetSync\\obj\\",
+      "outputPath": "E:\\CodeProject\\Unity\\Network Development Fundamental\\Tcp Communication\\TcpCommunication\\TcpServerSync\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ostxe\\AppData\\Roaming\\NuGet\\NuGet.Config",

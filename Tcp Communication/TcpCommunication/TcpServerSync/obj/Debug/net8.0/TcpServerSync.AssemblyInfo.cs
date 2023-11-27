@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TcpServerSync")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+34a5801a5ee03f1ba6e1823e34cd74af61e22547")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("TcpServerSync")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TcpServerSync")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
