@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "TcpServerSyncExercise2/1.0.0": {
+        "runtime": {
+          "TcpServerSyncExercise2.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TcpServerSyncExercise2/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
