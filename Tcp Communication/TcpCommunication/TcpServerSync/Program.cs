@@ -42,8 +42,15 @@ namespace NetSync
             Console.WriteLine("有客户端连入了");
             //6.用Send和Receive相关方法收发数据
             //发送
-            socketClient.Send(Encoding.UTF8.GetBytes("欢迎连入服务端"));
-            //接受
+            PlayerMsg msg = new PlayerMsg();
+            msg.playerID = 666;
+            msg.playerData = new PlayerData();
+            msg.playerData.name = "我是唐老狮的服务端";
+            msg.playerData.atk = 99;
+            msg.playerData.lev = 50;
+
+            socketClient.Send(msg.Writing());
+            //接收
             byte[] result = new byte[1024];
             //返回值为接受到的字节数
             int receiveNum = socketClient.Receive(result);

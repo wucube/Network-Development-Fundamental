@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using UnityEngine;
+using System;
 
 public class Lesson6 : MonoBehaviour
 {
@@ -41,6 +42,22 @@ public class Lesson6 : MonoBehaviour
         //接收数据
         byte[] receiveBytes = new byte[1024];
         int receiveNum = socket.Receive(receiveBytes);
+
+        //首先解析消息的ID
+        //使用字节数组中的前四个字节 得到ID
+        int msgID = BitConverter.ToInt32(receiveBytes, 0);
+        switch (msgID)
+        {
+            case 1001:
+                PlayerMsg msg = new PlayerMsg();
+                msg.Reading(receiveBytes, 4);
+                print(msg.playerID);
+                print(msg.playerData.name);
+                print(msg.playerData.atk);
+                print(msg.playerData.lev);
+                break;
+        }
+
         print("收到服务端发来的消息：" + Encoding.UTF8.GetString(receiveBytes, 0, receiveNum));
 
         //发送数据
