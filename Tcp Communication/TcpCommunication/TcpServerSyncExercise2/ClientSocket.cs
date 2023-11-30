@@ -37,13 +37,13 @@ namespace TcpServerSyncExercise2
             }
         }
         //发送
-        public void Send(string info)
+        public void Send(BaseMsg info)
         {
             if (socket != null)
             {
                 try
                 {
-                    socket.Send(Encoding.UTF8.GetBytes(info));
+                    socket.Send(info.Writing());
                 }
                 catch (Exception e)
                 {
@@ -64,7 +64,19 @@ namespace TcpServerSyncExercise2
                 {
                     byte[] result = new byte[1024 * 5];
                     int receiveNum = socket.Receive(result);
-                    ThreadPool.QueueUserWorkItem(MsgHandle, Encoding.UTF8.GetString(result, 0, receiveNum));
+                    //收到数据后 先读取4个字节 转为ID 才知道用哪一个类型去处理反序列化
+                    int msgID = BitConverter.ToInt32(result, 0);
+                    BaseMsg msg = null;
+                    switch (msgID)
+                    {
+                        case 1001:
+                            msg = new PlayerMsg();
+                            msg.Reading(result, 4);
+                            break;
+                    }
+                    if (msg == null)
+                        return;
+                    ThreadPool.QueueUserWorkItem(MsgHandle, msg);
                 }
             }
             catch (Exception e)
@@ -76,8 +88,15 @@ namespace TcpServerSyncExercise2
 
         private void MsgHandle(object obj)
         {
-            string str = obj as string;
-            Console.WriteLine("收到客户端{0}发来的消息：{1}", this.socket.RemoteEndPoint, str);
+            BaseMsg msg = obj as BaseMsg;
+            if (msg is PlayerMsg)
+            {
+                PlayerMsg playerMsg = msg as PlayerMsg;
+                Console.WriteLine(playerMsg.playerID);
+                Console.WriteLine(playerMsg.playerData.name);
+                Console.WriteLine(playerMsg.playerData.lev);
+                Console.WriteLine(playerMsg.playerData.atk);
+            }
         }
 
     }

@@ -54,7 +54,6 @@ namespace TcpServerSyncExercise2
                     //连入一个客户端
                     Socket clientSocket = socket.Accept();
                     ClientSocket client = new ClientSocket(clientSocket);
-                    client.Send("欢迎连入服务器");
                     clientDic.Add(client.clientID, client);
                 }
                 catch (Exception e)
@@ -78,7 +77,7 @@ namespace TcpServerSyncExercise2
             }
         }
 
-        public void Broadcast(string info)
+        public void Broadcast(BaseMsg info)
         {
             foreach (ClientSocket client in clientDic.Values)
             {

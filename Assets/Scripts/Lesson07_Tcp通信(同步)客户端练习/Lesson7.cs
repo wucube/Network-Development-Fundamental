@@ -16,8 +16,13 @@ public class Lesson7 : MonoBehaviour
     {
         btn.onClick.AddListener(() =>
         {
-            if (input.text != "")
-                NetMgr.Instance.Send(input.text);
+            PlayerMsg ms = new PlayerMsg();
+            ms.playerID = 1111;
+            ms.playerData = new PlayerData();
+            ms.playerData.name = "唐老狮客户端发送的信息";
+            ms.playerData.atk = 22;
+            ms.playerData.lev = 10;
+            NetMgr.Instance.Send(ms);
         });
     }
 

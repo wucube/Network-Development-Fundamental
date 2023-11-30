@@ -21,7 +21,16 @@
                 }
                 else if (input.Substring(0, 2) == "B:")
                 {
-                    socket.Broadcast(input.Substring(2));
+                    if (input.Substring(2) == "1001")
+                    {
+                        PlayerMsg msg = new PlayerMsg();
+                        msg.playerID = 9876;
+                        msg.playerData = new PlayerData();
+                        msg.playerData.name = "服务器端发来的消息";
+                        msg.playerData.lev = 99;
+                        msg.playerData.atk = 80;
+                        socket.Broadcast(msg);
+                    }
                 }
             }
         }
