@@ -34,6 +34,7 @@ public class PlayerMsg : BaseMsg
     public override int GetBytesNum()
     {
         return 4 + //消息ID的长度
+             4 + //消息体的长度
              4 + //playerID的字节数组长度
              playerData.GetBytesNum();//playerData的字节数组长度
     }
