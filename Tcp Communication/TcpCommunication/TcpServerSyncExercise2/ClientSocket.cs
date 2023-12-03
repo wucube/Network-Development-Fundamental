@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace TcpServerSyncExercise2
 {
     class ClientSocket
@@ -12,6 +7,10 @@ namespace TcpServerSyncExercise2
         private static int CLIENT_BEGIN_ID = 1;
         public int clientID;
         public Socket socket;
+
+        //用于处理分包时 缓存的 字节数组 和 字节数组长度
+        private byte[] cacheBytes = new byte[1024 * 1024];
+        private int cacheNum = 0;
 
         public ClientSocket(Socket socket)
         {
@@ -64,19 +63,20 @@ namespace TcpServerSyncExercise2
                 {
                     byte[] result = new byte[1024 * 5];
                     int receiveNum = socket.Receive(result);
-                    //收到数据后 先读取4个字节 转为ID 才知道用哪一个类型去处理反序列化
-                    int msgID = BitConverter.ToInt32(result, 0);
-                    BaseMsg msg = null;
-                    switch (msgID)
-                    {
-                        case 1001:
-                            msg = new PlayerMsg();
-                            msg.Reading(result, 4);
-                            break;
-                    }
-                    if (msg == null)
-                        return;
-                    ThreadPool.QueueUserWorkItem(MsgHandle, msg);
+                    HandleReceiveMsg(result, receiveNum);
+                    ////收到数据后 先读取4个字节 转为ID 才知道用哪一个类型去处理反序列化
+                    //int msgID = BitConverter.ToInt32(result, 0);
+                    //BaseMsg msg = null;
+                    //switch (msgID)
+                    //{
+                    //    case 1001:
+                    //        msg = new PlayerMsg();
+                    //        msg.Reading(result, 4);
+                    //        break;
+                    //}
+                    //if (msg == null)
+                    //    return;
+                    //ThreadPool.QueueUserWorkItem(MsgHandle, msg);
                 }
             }
             catch (Exception e)
@@ -84,6 +84,76 @@ namespace TcpServerSyncExercise2
                 Console.WriteLine("收消息出错" + e.Message);
                 Close();
             }
+        }
+
+        /// <summary>
+        /// 处理接受消息 分包、黏包问题的方法
+        /// </summary>
+        /// <param name="receiveBytes"></param>
+        /// <param name="receiveNum"></param>
+        private void HandleReceiveMsg(byte[] receiveBytes, int receiveNum)
+        {
+            int msgID = 0;
+            int msgLength = 0;
+            int nowIndex = 0;
+
+            //收到消息时 应该看看 之前有没有缓存的 如果有的话 我们直接拼接到后面
+            receiveBytes.CopyTo(cacheBytes, cacheNum);
+            cacheNum += receiveNum;
+
+            while (true)
+            {
+                //每次将长度设置为-1 是避免上一次解析的数据 影响这一次的判断
+                msgLength = -1;
+                //处理解析一条消息
+                if (cacheNum - nowIndex >= 8)
+                {
+                    //解析ID
+                    msgID = BitConverter.ToInt32(cacheBytes, nowIndex);
+                    nowIndex += 4;
+                    //解析长度
+                    msgLength = BitConverter.ToInt32(cacheBytes, nowIndex);
+                    nowIndex += 4;
+                }
+
+                if (cacheNum - nowIndex >= msgLength && msgLength != -1)
+                {
+                    //解析消息体
+                    BaseMsg baseMsg = null;
+                    switch (msgID)
+                    {
+                        case 1001:
+                            PlayerMsg msg = new PlayerMsg();
+                            msg.Reading(cacheBytes, nowIndex);
+                            baseMsg = msg;
+                            break;
+                    }
+                    if (baseMsg != null)
+                        ThreadPool.QueueUserWorkItem(MsgHandle, baseMsg);
+                    nowIndex += msgLength;
+                    if (nowIndex == cacheNum)
+                    {
+                        cacheNum = 0;
+                        break;
+                    }
+                }
+                else
+                {
+                    //如果不满足 证明有分包 
+                    //那么我们需要把当前收到的内容 记录下来
+                    //有待下次接受到消息后 再做处理
+                    //receiveBytes.CopyTo(cacheBytes, 0);
+                    //cacheNum = receiveNum;
+                    //如果进行了 id和长度的解析 但是 没有成功解析消息体 那么我们需要减去nowIndex移动的位置
+                    if (msgLength != -1)
+                        nowIndex -= 8;
+                    //就是把剩余没有解析的字节数组内容 移到前面来 用于缓存下次继续解析
+                    Array.Copy(cacheBytes, nowIndex, cacheBytes, 0, cacheNum - nowIndex);
+                    cacheNum = cacheNum - nowIndex;
+                    break;
+                }
+            }
+
         }
 
         private void MsgHandle(object obj)

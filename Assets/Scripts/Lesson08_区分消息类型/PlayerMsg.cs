@@ -9,9 +9,12 @@ public class PlayerMsg : BaseMsg
     public override byte[] Writing()
     {
         int index = 0;
-        byte[] bytes = new byte[GetBytesNum()];
+        int bytesNum = GetBytesNum();
+        byte[] bytes = new byte[bytesNum];
         //先写消息ID
         WriteInt(bytes, GetID(), ref index);
+        //写如消息体的长度 我们-8的目的 是只存储 消息体的长度 前面8个字节 是我们自己定的规则 解析时按照这个规则处理就行了
+        WriteInt(bytes, bytesNum - 8, ref index);
         //写这个消息的成员变量
         WriteInt(bytes, playerID, ref index);
         WriteData(bytes, playerData, ref index);
