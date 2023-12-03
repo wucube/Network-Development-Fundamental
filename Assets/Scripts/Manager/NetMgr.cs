@@ -45,7 +45,7 @@ public class NetMgr : MonoBehaviour
             BaseMsg msg = receiveQueue.Dequeue();
             if (msg is PlayerMsg)
             {
-                PlayerMsg playerMsg = (msg as PlayerMsg);
+                PlayerMsg playerMsg = msg as PlayerMsg;
                 print(playerMsg.playerID);
                 print(playerMsg.playerData.name);
                 print(playerMsg.playerData.lev);
@@ -213,8 +213,15 @@ public class NetMgr : MonoBehaviour
     {
         if (socket != null)
         {
+            print("客户端主动断开连接");
+
+            //主动发送一条断开连接的消息给服务端
+            QuitMsg msg = new QuitMsg();
+            socket.Send(msg.Writing());
             socket.Shutdown(SocketShutdown.Both);
+            socket.Disconnect(false);
             socket.Close();
+            socket = null;
 
             isConnected = false;
         }

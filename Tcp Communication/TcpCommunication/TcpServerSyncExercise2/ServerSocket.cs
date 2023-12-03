@@ -15,6 +15,9 @@ namespace TcpServerSyncExercise2
         //客户端连接的所有Socket
         public Dictionary<int, ClientSocket> clientDic = new Dictionary<int, ClientSocket>();
 
+        //有待移除的客户端socket 避免 在foreach时直接从字典中移除 出现问题
+        private List<ClientSocket> delList = new List<ClientSocket>();
+
         private bool isClose;
 
         //开启服务器端
@@ -54,7 +57,8 @@ namespace TcpServerSyncExercise2
                     //连入一个客户端
                     Socket clientSocket = socket.Accept();
                     ClientSocket client = new ClientSocket(clientSocket);
-                    clientDic.Add(client.clientID, client);
+                    lock (clientDic)
+                        clientDic.Add(client.clientID, client);
                 }
                 catch (Exception e)
                 {
@@ -69,9 +73,14 @@ namespace TcpServerSyncExercise2
             {
                 if (clientDic.Count > 0)
                 {
-                    foreach (ClientSocket client in clientDic.Values)
+                    lock (clientDic)
                     {
-                        client.Receive();
+                        foreach (ClientSocket client in clientDic.Values)
+                        {
+                            client.Receive();
+                        }
+
+                        CloseDelListSocket();
                     }
                 }
             }
@@ -82,6 +91,36 @@ namespace TcpServerSyncExercise2
             foreach (ClientSocket client in clientDic.Values)
             {
                 client.Send(info);
+            }
+        }
+
+        //添加待移除的 socket内容
+        public void AddDelSocket(ClientSocket socket)
+        {
+            if (!delList.Contains(socket))
+                delList.Add(socket);
+        }
+
+        ////判断有没有 断开连接的 把其 移除
+        public void CloseDelListSocket()
+        {
+            //判断有没有 断开连接的 把其 移除
+            for (int i = 0; i < delList.Count; i++)
+                CloseClientSocket(delList[i]);
+            delList.Clear();
+        }
+
+        //关闭客户端连接的 从字典中移除
+        public void CloseClientSocket(ClientSocket socket)
+        {
+            lock (clientDic)
+            {
+                socket.Close();
+                if (clientDic.ContainsKey(socket.clientID))
+                {
+                    clientDic.Remove(socket.clientID);
+                    Console.WriteLine("客户端{0}主动断开连接了", socket.clientID);
+                }
             }
         }
     }

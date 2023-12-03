@@ -38,7 +38,7 @@ namespace TcpServerSyncExercise2
         //发送
         public void Send(BaseMsg info)
         {
-            if (socket != null)
+            if (Connected)
             {
                 try
                 {
@@ -47,16 +47,21 @@ namespace TcpServerSyncExercise2
                 catch (Exception e)
                 {
                     Console.WriteLine("发消息出错" + e.Message);
-                    Close();
+                    Program.socket.AddDelSocket(this);
                 }
             }
+            else
+                Program.socket.AddDelSocket(this);
 
         }
         //接收
         public void Receive()
         {
-            if (socket == null)
+            if (!Connected)
+            {
+                Program.socket.AddDelSocket(this);
                 return;
+            }
             try
             {
                 if (socket.Available > 0)
@@ -82,7 +87,8 @@ namespace TcpServerSyncExercise2
             catch (Exception e)
             {
                 Console.WriteLine("收消息出错" + e.Message);
-                Close();
+                //解析消息出错 也认为 要把socket断开了
+                Program.socket.AddDelSocket(this);
             }
         }
 
@@ -123,9 +129,12 @@ namespace TcpServerSyncExercise2
                     switch (msgID)
                     {
                         case 1001:
-                            PlayerMsg msg = new PlayerMsg();
-                            msg.Reading(cacheBytes, nowIndex);
-                            baseMsg = msg;
+                            baseMsg = new PlayerMsg();
+                            baseMsg.Reading(cacheBytes, nowIndex);
+                            break;
+                        case 1003:
+                            baseMsg = new QuitMsg();
+                            //由于该消息没有消息体 所以都不用反序列化
                             break;
                     }
                     if (baseMsg != null)
@@ -153,7 +162,7 @@ namespace TcpServerSyncExercise2
                     break;
                 }
             }
-
+            
         }
 
         private void MsgHandle(object obj)
@@ -166,6 +175,11 @@ namespace TcpServerSyncExercise2
                 Console.WriteLine(playerMsg.playerData.name);
                 Console.WriteLine(playerMsg.playerData.lev);
                 Console.WriteLine(playerMsg.playerData.atk);
+            }
+            else if (msg is QuitMsg)
+            {
+                //收到断开连接消息 把自己添加到待移除的列表当中
+                Program.socket.AddDelSocket(this);
             }
         }
 

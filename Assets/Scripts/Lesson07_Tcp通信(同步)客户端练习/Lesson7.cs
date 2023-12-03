@@ -19,6 +19,8 @@ public class Lesson7 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //服务端为 Tcp同步通信服务端练习02
+
         btn.onClick.AddListener(() =>
         {
             PlayerMsg ms = new PlayerMsg();
