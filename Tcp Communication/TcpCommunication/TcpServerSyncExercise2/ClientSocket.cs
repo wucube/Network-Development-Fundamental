@@ -12,11 +12,36 @@ namespace TcpServerSyncExercise2
         private byte[] cacheBytes = new byte[1024 * 1024];
         private int cacheNum = 0;
 
+        //上一次收到消息的时间
+        private long frontTime = -1;
+        //超时时间
+        private static int TIME_OUT_TIME = 10;
+
         public ClientSocket(Socket socket)
         {
             this.clientID = CLIENT_BEGIN_ID;
             this.socket = socket;
             ++CLIENT_BEGIN_ID;
+            //我们现在为了方便大家理解 所以开了一个线程专门计时 但是这种方式比较消耗性能 不建议这样使用
+            //ThreadPool.QueueUserWorkItem(CheckTimeOut);
+        }
+
+        /// <summary>
+        /// 间隔一段时间 检测一次超时 如果超时 就会主动断开该客户端的连接
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CheckTimeOut(/*object obj*/)
+        {
+            //while (Connected)
+            //{
+            if (frontTime != -1 &&
+            DateTime.Now.Ticks / TimeSpan.TicksPerSecond - frontTime >= TIME_OUT_TIME)
+            {
+                Program.socket.AddDelSocket(this);
+                //break;
+            }
+            //Thread.Sleep(5000);
+            //}
         }
 
         /// <summary>
@@ -83,6 +108,9 @@ namespace TcpServerSyncExercise2
                     //    return;
                     //ThreadPool.QueueUserWorkItem(MsgHandle, msg);
                 }
+
+                //检测 是否超时 
+                CheckTimeOut();
             }
             catch (Exception e)
             {
@@ -136,7 +164,12 @@ namespace TcpServerSyncExercise2
                             baseMsg = new QuitMsg();
                             //由于该消息没有消息体 所以都不用反序列化
                             break;
+                        case 999:
+                            baseMsg = new HeartMsg();
+                            //由于该消息没有消息体 所以都不用反序列化
+                            break;
                     }
+                
                     if (baseMsg != null)
                         ThreadPool.QueueUserWorkItem(MsgHandle, baseMsg);
                     nowIndex += msgLength;
@@ -180,6 +213,12 @@ namespace TcpServerSyncExercise2
             {
                 //收到断开连接消息 把自己添加到待移除的列表当中
                 Program.socket.AddDelSocket(this);
+            }
+            else if (msg is HeartMsg)
+            {
+                //收到心跳消息 记录收到消息的时间
+                frontTime = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+                Console.WriteLine("收到心跳消息");
             }
         }
 

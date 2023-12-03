@@ -31,10 +31,23 @@ public class NetMgr : MonoBehaviour
     //是否连接
     private bool isConnected = false;
 
+    //发送心跳消息的间隔时间
+    private int SEND_HEART_MSG_TIME = 2;
+    private HeartMsg hearMsg = new HeartMsg();
+
     void Awake()
     {
         instance = this;
         DontDestroyOnLoad(this.gameObject);
+
+        //客户端循环定时给服务端发送心跳消息
+        InvokeRepeating("SendHeartMsg", 0, SEND_HEART_MSG_TIME);
+    }
+
+    private void SendHeartMsg()
+    {
+        if (isConnected)
+            Send(hearMsg);
     }
 
     // Update is called once per frame
@@ -216,11 +229,11 @@ public class NetMgr : MonoBehaviour
             print("客户端主动断开连接");
 
             //主动发送一条断开连接的消息给服务端
-            QuitMsg msg = new QuitMsg();
-            socket.Send(msg.Writing());
-            socket.Shutdown(SocketShutdown.Both);
-            socket.Disconnect(false);
-            socket.Close();
+            //QuitMsg msg = new QuitMsg();
+            //socket.Send(msg.Writing());
+            //socket.Shutdown(SocketShutdown.Both);
+            //socket.Disconnect(false);
+            //socket.Close();
             socket = null;
 
             isConnected = false;
