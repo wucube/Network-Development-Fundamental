@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("UdpServerSync")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("UdpServerSyncExercise")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyProductAttribute("UdpServerSync")]
-[assembly: System.Reflection.AssemblyTitleAttribute("UdpServerSync")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bf4f0f77cad88d13f47e4d5aa6c3701ac35f1379")]
+[assembly: System.Reflection.AssemblyProductAttribute("UdpServerSyncExercise")]
+[assembly: System.Reflection.AssemblyTitleAttribute("UdpServerSyncExercise")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // 由 MSBuild WriteCodeFragment 类生成。
