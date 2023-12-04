@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TcpServerAsync")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2e5058ed985ed0d7fed631a97589a9b4ab061190")]
 [assembly: System.Reflection.AssemblyProductAttribute("TcpServerAsync")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TcpServerAsync")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
