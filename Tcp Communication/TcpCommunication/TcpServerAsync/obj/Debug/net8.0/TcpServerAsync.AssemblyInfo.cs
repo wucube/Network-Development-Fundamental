@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("TcpServerSyncExercise2")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("TcpServerAsync")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyProductAttribute("TcpServerSyncExercise2")]
-[assembly: System.Reflection.AssemblyTitleAttribute("TcpServerSyncExercise2")]
+[assembly: System.Reflection.AssemblyProductAttribute("TcpServerAsync")]
+[assembly: System.Reflection.AssemblyTitleAttribute("TcpServerAsync")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // 由 MSBuild WriteCodeFragment 类生成。
