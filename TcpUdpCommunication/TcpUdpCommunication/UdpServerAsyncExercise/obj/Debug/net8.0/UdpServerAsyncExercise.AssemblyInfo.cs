@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UdpServerAsyncExercise")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+204e509f350f06b4f5d4c6f93b1683957d73967b")]
 [assembly: System.Reflection.AssemblyProductAttribute("UdpServerAsyncExercise")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UdpServerAsyncExercise")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,0 +1,15 @@
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\bin\Debug\net8.0\UdpServerAsyncExercise.exe
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\bin\Debug\net8.0\UdpServerAsyncExercise.deps.json
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\bin\Debug\net8.0\UdpServerAsyncExercise.runtimeconfig.json
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\bin\Debug\net8.0\UdpServerAsyncExercise.dll
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\bin\Debug\net8.0\UdpServerAsyncExercise.pdb
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\UdpServerAsyncExercise.GeneratedMSBuildEditorConfig.editorconfig
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\UdpServerAsyncExercise.AssemblyInfoInputs.cache
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\UdpServerAsyncExercise.AssemblyInfo.cs
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\UdpServerAsyncExercise.csproj.CoreCompileInputs.cache
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\UdpServerAsyncExercise.sourcelink.json
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\UdpServerAsyncExercise.dll
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\refint\UdpServerAsyncExercise.dll
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\UdpServerAsyncExercise.pdb
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\UdpServerAsyncExercise.genruntimeconfig.cache
+E:\CodeProject\Unity\Network Development Fundamental\TcpUdpCommunication\TcpUdpCommunication\UdpServerAsyncExercise\obj\Debug\net8.0\ref\UdpServerAsyncExercise.dll
