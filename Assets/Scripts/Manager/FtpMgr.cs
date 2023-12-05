@@ -75,4 +75,61 @@ public class FtpMgr
         //上传结束后 你想在外部做的事情
         action?.Invoke();
     }
+
+    /// <summary>
+    /// 下载文件从Ftp服务器当中（异步）
+    /// </summary>
+    /// <param name="fileName">FTP上想要下载的文件名</param>
+    /// <param name="localPath">存储的本地文件路径</param>
+    /// <param name="action">下载完毕后想要做什么的委托函数</param>
+    public async void DownLoadFile(string fileName, string localPath, UnityAction action = null)
+    {
+        await Task.Run(() => {
+            try
+            {
+                //1.创建一个Ftp连接
+                FtpWebRequest req = FtpWebRequest.Create(new Uri(FTP_PATH + fileName)) as FtpWebRequest;
+                //2.进行一些设置
+                //凭证
+                req.Credentials = new NetworkCredential(USER_NAME, PASSWORD);
+                //是否操作结束后 关闭 控制连接
+                req.KeepAlive = false;
+                //传输类型
+                req.UseBinary = true;
+                //操作类型
+                req.Method = WebRequestMethods.Ftp.DownloadFile;
+                //代理设置为空
+                req.Proxy = null;
+                //3.下载
+                FtpWebResponse res = req.GetResponse() as FtpWebResponse;
+                Stream downLoadStream = res.GetResponseStream();
+                //写入到本地文件中
+                using (FileStream fileStream = File.Create(localPath))
+                {
+                    byte[] bytes = new byte[1024];
+                    //读取数据
+                    int contentLength = downLoadStream.Read(bytes, 0, bytes.Length);
+                    //一点一点的写入
+                    while (contentLength != 0)
+                    {
+                        //读多少 写多少
+                        fileStream.Write(bytes, 0, contentLength);
+                        //继续读
+                        contentLength = downLoadStream.Read(bytes, 0, bytes.Length);
+                    }
+                    fileStream.Close();
+                    downLoadStream.Close();
+                }
+
+                Debug.Log("下载成功");
+            }
+            catch (Exception e)
+            {
+                Debug.Log("下载失败" + e.Message);
+            }
+        });
+
+        //如果下载结束有想做的事情 在这里调用外部传入的委托函数
+        action?.Invoke();
+    }
 }
