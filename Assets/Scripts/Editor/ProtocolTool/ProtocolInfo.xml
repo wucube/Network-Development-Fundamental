@@ -30,4 +30,5 @@
 		<field type = "PlayerData" name = "data"/>
 	</message>
 	<message id = "1002" name= "HeartMsg" namespace = "GameSystem"/>
+	<message id = "1003" name= "QuitMsg" namespace = "GameSystem"/>
 </messages>
