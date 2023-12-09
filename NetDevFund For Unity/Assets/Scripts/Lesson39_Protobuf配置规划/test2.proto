@@ -1,0 +1,6 @@
+syntax = "proto3";//决定了proto文档的版本号
+package GameSystemTest;//这决定了命名空间
+message HeartMsg
+{
+	int64 time = 1;
+}
